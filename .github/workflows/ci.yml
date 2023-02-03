@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install LaTeX
+        run: sudo apt install texlive-latex-base texlive-lang-cyrillic texlive-lang-greek texlive-latex-extra texlive-latex-recommended texlive-pictures texlive-plain-generic texlive-science
+
+      - name: Render pdfs
+        run: bash scripts/render.bash
+        shell: bash
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Upload renders
+          file_pattern: '*.pdf'
